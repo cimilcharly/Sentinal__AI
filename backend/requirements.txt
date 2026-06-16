@@ -1,0 +1,14 @@
+pandas
+streamlit
+scikit-learn
+psutil
+sqlalchemy
+streamlit-authenticator
+pyyaml
+requests
+fastapi
+uvicorn
+pyjwt
+passlib[bcrypt]
+python-multipart
+pydantic

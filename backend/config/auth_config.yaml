@@ -1,0 +1,20 @@
+cookie:
+  expiry_days: 30
+  key: threat_sentinel_cookie_key
+  name: threat_sentinel_cookie
+credentials:
+  usernames:
+    admin:
+      email: admin-soc@company.com
+      name: System Administrator
+      password: $2b$12$ggLDMmK9GxdrglENQeZSMu0xrgOIkktG8r3S4Udgs5IE0Bufp9fSa
+      role: admin
+    analyst:
+      email: analyst-soc@company.com
+      name: Security Analyst
+      password: $2b$12$jlJmIKTbhdeu4goGUVNwiu/yabspByYGfme20Am0avWUUsNFBV3NW
+      role: analyst
+pre-authorized:
+  emails:
+  - admin-soc@company.com
+  - analyst-soc@company.com
