@@ -1,3 +1,9 @@
+import os
+import sys
+
+# Append backend directory to sys.path
+sys.path.append(os.path.dirname(__file__))
+
 from fastapi import FastAPI, Depends, HTTPException, status, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -92,6 +98,7 @@ app.include_router(
 
 # ============ HEALTH CHECK ============
 
+@app.get("/api/v1/health")
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
