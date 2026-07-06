@@ -74,21 +74,40 @@ export class ApiClient {
   }
 
   // Authentication endpoints
-  async login(email: string, password: string) {
+  async login(email: string, password: string): Promise<ApiResponse<any>> {
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
 
-    const response = await fetch(`${API_BASE}/auth/login`, {
-      method: 'POST',
-      body: formData,
-    });
+    try {
+      const response = await fetch(`${API_BASE}/auth/login`, {
+        method: 'POST',
+        body: formData,
+      });
 
-    const data = await response.json();
-    if (response.ok && data.access_token) {
-      this.setToken(data.access_token);
+      const data = await response.json();
+
+      if (!response.ok) {
+        return {
+          error: data.detail || 'Login failed',
+          status: response.status,
+        };
+      }
+
+      if (data.access_token) {
+        this.setToken(data.access_token);
+      }
+
+      return {
+        data,
+        status: response.status,
+      };
+    } catch (error) {
+      return {
+        error: error instanceof Error ? error.message : 'Network error',
+        status: 500,
+      };
     }
-    return data;
   }
 
   async getCurrentUser() {
