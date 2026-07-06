@@ -5,6 +5,7 @@ psycopg2-binary
 pydantic
 pydantic-extra-types
 python-jose[cryptography]
+PyJWT
 python-multipart
 bcrypt
 passlib
