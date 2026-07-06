@@ -5,10 +5,16 @@ from sqlalchemy.orm import declarative_base, sessionmaker, scoped_session
 from sqlalchemy.pool import QueuePool
 import os
 
-DATABASE_URL = os.getenv(
-    "DATABASE_URL",
-    "postgresql://user:password@localhost:5432/insider_threat_saas"
-)
+DATABASE_URL = os.getenv("DATABASE_URL", "")
+
+if not DATABASE_URL or not DATABASE_URL.strip():
+    DATABASE_URL = "postgresql://user:password@localhost:5432/insider_threat_saas"
+
+DATABASE_URL = DATABASE_URL.strip().strip("'\"")
+
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 
 engine = create_engine(
     DATABASE_URL,
