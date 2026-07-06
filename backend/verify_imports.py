@@ -25,7 +25,6 @@ REQUIRED_MODULES = [
     "cryptography",
     "bcrypt",
     "sklearn",
-    "torch",
     "openai",
 ]
 
