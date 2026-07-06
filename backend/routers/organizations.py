@@ -6,12 +6,13 @@ from models import Tenant, User
 from schemas import TenantCreate, TenantResponse, UserResponse
 from typing import List
 import secrets
+from routers.auth import get_current_user
 
 router = APIRouter()
 
 
 @router.get("/", response_model=TenantResponse)
-async def get_organization(current_user: User = Depends()):
+async def get_organization(current_user: User = Depends(get_current_user)):
     """Get current organization details."""
     db = SessionLocal()
     try:
@@ -24,7 +25,7 @@ async def get_organization(current_user: User = Depends()):
 
 
 @router.get("/users", response_model=List[UserResponse])
-async def list_organization_users(current_user: User = Depends()):
+async def list_organization_users(current_user: User = Depends(get_current_user)):
     """List all users in organization."""
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Only admins can view users")
@@ -38,7 +39,7 @@ async def list_organization_users(current_user: User = Depends()):
 
 
 @router.post("/users/invite")
-async def invite_user(email: str, role: str, current_user: User = Depends()):
+async def invite_user(email: str, role: str, current_user: User = Depends(get_current_user)):
     """Invite new user to organization."""
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Only admins can invite users")
@@ -66,7 +67,7 @@ async def invite_user(email: str, role: str, current_user: User = Depends()):
 
 
 @router.post("/api-keys")
-async def generate_api_key(current_user: User = Depends()):
+async def generate_api_key(current_user: User = Depends(get_current_user)):
     """Generate new API key for organization."""
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Only admins can generate API keys")

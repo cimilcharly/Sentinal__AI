@@ -7,12 +7,13 @@ from models import User, RiskAssessment, ActivityLog, ThreatType
 from schemas import ThreatAnalysisRequest, RiskAssessmentResponse
 from typing import List, Optional
 import json
+from routers.auth import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/analyze")
-async def analyze_threat(request: ThreatAnalysisRequest, current_user: User = Depends()):
+async def analyze_threat(request: ThreatAnalysisRequest, current_user: User = Depends(get_current_user)):
     """Analyze threat for a user."""
     db = SessionLocal()
     try:
@@ -52,7 +53,7 @@ async def analyze_threat(request: ThreatAnalysisRequest, current_user: User = De
 
 @router.get("/assessments", response_model=List[RiskAssessmentResponse])
 async def list_risk_assessments(
-    current_user: User = Depends(),
+    current_user: User = Depends(get_current_user),
     days: int = Query(7, ge=1, le=90),
     threat_type: Optional[str] = None,
     flagged_only: bool = False
@@ -70,14 +71,14 @@ async def list_risk_assessments(
         if flagged_only:
             query = query.filter(RiskAssessment.flagged == True)
 
-        assessments = query.order_by(RiskAssessmentResponse.assessment_date.desc()).all()
+        assessments = query.order_by(RiskAssessment.assessment_date.desc()).all()
         return [RiskAssessmentResponse.from_orm(a) for a in assessments]
     finally:
         db.close()
 
 
 @router.get("/assessments/{employee_id}", response_model=RiskAssessmentResponse)
-async def get_employee_assessment(employee_id: str, current_user: User = Depends()):
+async def get_employee_assessment(employee_id: str, current_user: User = Depends(get_current_user)):
     """Get latest assessment for an employee."""
     db = SessionLocal()
     try:
@@ -95,7 +96,7 @@ async def get_employee_assessment(employee_id: str, current_user: User = Depends
 
 
 @router.post("/assessments/{assessment_id}/acknowledge")
-async def acknowledge_assessment(assessment_id: str, current_user: User = Depends()):
+async def acknowledge_assessment(assessment_id: str, current_user: User = Depends(get_current_user)):
     """Acknowledge a risk assessment."""
     db = SessionLocal()
     try:

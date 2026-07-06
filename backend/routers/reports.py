@@ -6,12 +6,13 @@ from database import SessionLocal
 from models import User, Report, RiskAssessment
 from schemas import ReportRequest, ReportResponse
 from typing import List
+from routers.auth import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/generate")
-async def generate_report(request: ReportRequest, current_user: User = Depends()):
+async def generate_report(request: ReportRequest, current_user: User = Depends(get_current_user)):
     """Generate security report for organization."""
     db = SessionLocal()
     try:
@@ -52,7 +53,7 @@ async def generate_report(request: ReportRequest, current_user: User = Depends()
 
 
 @router.get("/", response_model=List[ReportResponse])
-async def list_reports(current_user: User = Depends(), limit: int = 10):
+async def list_reports(current_user: User = Depends(get_current_user), limit: int = 10):
     """List organization reports."""
     db = SessionLocal()
     try:
@@ -66,7 +67,7 @@ async def list_reports(current_user: User = Depends(), limit: int = 10):
 
 
 @router.get("/{report_id}", response_model=ReportResponse)
-async def get_report(report_id: str, current_user: User = Depends()):
+async def get_report(report_id: str, current_user: User = Depends(get_current_user)):
     """Get specific report."""
     db = SessionLocal()
     try:
@@ -84,7 +85,7 @@ async def get_report(report_id: str, current_user: User = Depends()):
 
 
 @router.post("/{report_id}/send")
-async def send_report(report_id: str, current_user: User = Depends()):
+async def send_report(report_id: str, current_user: User = Depends(get_current_user)):
     """Send report (email integration)."""
     db = SessionLocal()
     try:

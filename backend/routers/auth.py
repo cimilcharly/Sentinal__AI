@@ -12,6 +12,7 @@ import string
 from database import SessionLocal
 from models import User, Tenant
 from schemas import UserCreate, UserLogin, UserResponse
+from security import PasswordSecurity
 
 router = APIRouter()
 
@@ -35,9 +36,8 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
 
 
 def hash_password(password: str) -> str:
-    """Hash password (use bcrypt in production)."""
-    import hashlib
-    return hashlib.sha256(password.encode()).hexdigest()
+    """Hash password using PasswordSecurity."""
+    return PasswordSecurity.hash_password(password)
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)):
@@ -55,8 +55,14 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     except jwt.InvalidTokenError:
         raise credentials_exception
 
+    import uuid
+    try:
+        user_uuid = uuid.UUID(user_id)
+    except ValueError:
+        raise credentials_exception
+
     db = SessionLocal()
-    user = db.query(User).filter(User.id == user_id).first()
+    user = db.query(User).filter(User.id == user_uuid).first()
     db.close()
 
     if user is None:
@@ -103,7 +109,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     try:
         user = db.query(User).filter(User.email == form_data.username).first()
 
-        if not user or user.password_hash != hash_password(form_data.password):
+        if not user or not PasswordSecurity.verify_password(form_data.password, user.password_hash):
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid credentials"

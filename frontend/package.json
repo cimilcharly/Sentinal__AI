@@ -1,0 +1,37 @@
+{
+  "name": "sentinel-ai-frontend",
+  "version": "1.0.0",
+  "description": "Sentinel AI - Enterprise Insider Threat Detection",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^16.2.6",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "axios": "^1.16.1",
+    "recharts": "^2.10.0",
+    "lucide-react": "^1.16.0",
+    "zustand": "^4.4.0",
+    "date-fns": "^2.30.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^3.6.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19",
+    "@types/node": "^20",
+    "@types/react-dom": "^19",
+    "typescript": "^5",
+    "tailwindcss": "^4",
+    "@tailwindcss/postcss": "^4",
+    "autoprefixer": "^10.4.0",
+    "postcss": "^8.4.0",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.6"
+  }
+}

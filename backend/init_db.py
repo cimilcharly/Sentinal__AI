@@ -1,6 +1,12 @@
 """Initialize database with sample data."""
 
 import os
+from dotenv import load_dotenv
+
+# Load local environment file
+dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(dotenv_path)
+
 from datetime import datetime, timedelta
 import uuid
 from database import SessionLocal, init_db, engine

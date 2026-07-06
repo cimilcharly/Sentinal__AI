@@ -1,6 +1,13 @@
 """Verify all imports and dependencies are available."""
 
 import sys
+import os
+from dotenv import load_dotenv
+
+# Load local environment file
+dotenv_path = os.path.join(os.path.dirname(__file__), "..", ".env")
+load_dotenv(dotenv_path)
+
 from importlib import import_module
 
 REQUIRED_MODULES = [
@@ -62,9 +69,10 @@ def check_database():
         from database import SessionLocal, engine
         from models import Base
 
+        from sqlalchemy import text
         # Test connection
         with SessionLocal() as db:
-            result = db.execute("SELECT 1")
+            result = db.execute(text("SELECT 1"))
             print("✅ PostgreSQL connection successful")
 
         # Check tables exist

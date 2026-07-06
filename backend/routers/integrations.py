@@ -6,12 +6,13 @@ from models import User, Integration
 from schemas import IntegrationCreate, IntegrationResponse
 from datetime import datetime
 from typing import List
+from routers.auth import get_current_user
 
 router = APIRouter()
 
 
 @router.post("/", response_model=IntegrationResponse)
-async def create_integration(data: IntegrationCreate, current_user: User = Depends()):
+async def create_integration(data: IntegrationCreate, current_user: User = Depends(get_current_user)):
     """Create new data source integration."""
     if current_user.role not in ["admin", "security_officer"]:
         raise HTTPException(status_code=403, detail="Insufficient permissions")
@@ -35,7 +36,7 @@ async def create_integration(data: IntegrationCreate, current_user: User = Depen
 
 
 @router.get("/", response_model=List[IntegrationResponse])
-async def list_integrations(current_user: User = Depends()):
+async def list_integrations(current_user: User = Depends(get_current_user)):
     """List organization integrations."""
     db = SessionLocal()
     try:
@@ -49,7 +50,7 @@ async def list_integrations(current_user: User = Depends()):
 
 
 @router.get("/{integration_id}", response_model=IntegrationResponse)
-async def get_integration(integration_id: str, current_user: User = Depends()):
+async def get_integration(integration_id: str, current_user: User = Depends(get_current_user)):
     """Get specific integration."""
     db = SessionLocal()
     try:
@@ -67,7 +68,7 @@ async def get_integration(integration_id: str, current_user: User = Depends()):
 
 
 @router.post("/{integration_id}/test")
-async def test_integration(integration_id: str, current_user: User = Depends()):
+async def test_integration(integration_id: str, current_user: User = Depends(get_current_user)):
     """Test integration connection."""
     db = SessionLocal()
     try:
@@ -89,7 +90,7 @@ async def test_integration(integration_id: str, current_user: User = Depends()):
 
 
 @router.post("/{integration_id}/sync")
-async def trigger_sync(integration_id: str, current_user: User = Depends()):
+async def trigger_sync(integration_id: str, current_user: User = Depends(get_current_user)):
     """Trigger data sync from integration."""
     db = SessionLocal()
     try:
@@ -114,7 +115,7 @@ async def trigger_sync(integration_id: str, current_user: User = Depends()):
 
 
 @router.delete("/{integration_id}")
-async def delete_integration(integration_id: str, current_user: User = Depends()):
+async def delete_integration(integration_id: str, current_user: User = Depends(get_current_user)):
     """Delete integration."""
     if current_user.role != "admin":
         raise HTTPException(status_code=403, detail="Only admins can delete integrations")

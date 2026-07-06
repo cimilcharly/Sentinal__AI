@@ -29,7 +29,11 @@ class APITester:
             if method == "GET":
                 response = requests.get(url, headers=headers)
             elif method == "POST":
-                response = requests.post(url, headers=headers, json=data)
+                if endpoint == "/auth/login":
+                    headers.pop("Content-Type", None)
+                    response = requests.post(url, headers=headers, data=data)
+                else:
+                    response = requests.post(url, headers=headers, json=data)
             else:
                 return False
 
@@ -122,7 +126,7 @@ def main():
     try:
         response = requests.post(
             f"{BASE_URL}/auth/login",
-            json={"username": "admin@acmecorp.com", "password": "password123"}
+            data={"username": "admin@acmecorp.com", "password": "password123"}
         )
         if response.status_code == 200:
             data = response.json()
