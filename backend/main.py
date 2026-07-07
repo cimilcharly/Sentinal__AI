@@ -14,7 +14,7 @@ from datetime import datetime
 
 from database import init_db, SessionLocal
 from models import Tenant
-from routers import auth, organizations, threats, reports, integrations
+from routers import auth, organizations, threats, reports, integrations, webhooks
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -93,6 +93,11 @@ app.include_router(
     integrations.router,
     prefix="/api/v1/integrations",
     tags=["Integrations"]
+)
+app.include_router(
+    webhooks.router,
+    prefix="/api/v1/webhooks",
+    tags=["Webhooks"]
 )
 
 

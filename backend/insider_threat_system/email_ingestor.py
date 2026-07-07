@@ -33,7 +33,7 @@ class RealTimeEmailIngestor:
         self.mail = None
         
         # Initialize Security Engines
-        self.llm = LLMEngine(use_mock=True)
+        self.llm = LLMEngine()
         self.alerts = AlertSystem(db_path=db_path)
         self.monitor = SystemMonitor()
 

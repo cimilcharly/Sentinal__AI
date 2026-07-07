@@ -182,7 +182,7 @@ else:
             all_risky = list(dict.fromkeys(list(live_leakers) + list(ml_risky)))[:15]
 
             if all_risky:
-                engine = LLMEngine(use_mock=True)
+                engine = LLMEngine()
                 table_data = []
                 for user in all_risky:
                     emp_info = get_employee_info(employees, user)
@@ -381,7 +381,7 @@ else:
                 """, unsafe_allow_html=True)
                 
                 # Analyze using masked PII
-                engine_xai = LLMEngine(use_mock=True)
+                engine_xai = LLMEngine()
                 summary_xai = summarize_user_activity(emails, get_user_psychometrics(psychs, selected_user_xai), selected_user_xai, user_ml_stats, synthetic, emp_info)
                 analysis_xai = engine_xai.analyze_user(summary_xai, user_id=selected_user_xai, real_name=real_name)
                 

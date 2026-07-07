@@ -42,7 +42,7 @@ if len(live_leakers) > 0:
     print("\n[SUMMARY GENERATED]")
     print(summary)
     
-    engine = LLMEngine(use_mock=True)
+    engine = LLMEngine()
     analysis = engine.analyze_user(summary)
     print("\n[AI ANALYSIS]")
     import json

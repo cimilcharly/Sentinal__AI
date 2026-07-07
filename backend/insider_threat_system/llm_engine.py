@@ -11,15 +11,18 @@ class LLMEngine:
     """
     def __init__(self, use_mock=None, api_key=None, model=None, api_base=None):
         # Allow environment configuration or parameters
-        self.provider = os.getenv("LLM_PROVIDER", "mock").lower()
+        self.provider = os.getenv("LLM_PROVIDER", "").lower()
+        if not self.provider:
+            use_mock_env = os.getenv("USE_MOCK_LLM", "true").lower() == "true"
+            self.provider = "mock" if use_mock_env else "openai"
         
         # Override config if parameters are explicitly passed
         if use_mock is True:
             self.provider = "mock"
-        elif use_mock is False and self.provider == "mock":
-            self.provider = "openai" # default to openai if mock explicitly disabled
+        elif use_mock is False:
+            self.provider = "openai" if self.provider == "mock" else self.provider
 
-        self.api_key = api_key or os.getenv("LLM_API_KEY")
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY") or os.getenv("LLM_API_KEY")
         self.model = model or os.getenv("LLM_MODEL_NAME", "gpt-3.5-turbo" if self.provider == "openai" else "llama3")
         self.api_base = api_base or os.getenv("LLM_API_BASE")
         self.anonymizer = PIIAnonymizer()

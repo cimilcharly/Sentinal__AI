@@ -46,11 +46,13 @@ def main():
         
         summary = summarize_user_activity(emails, user_psych, test_user, user_ml_stats=user_ml_stats)
         from insider_threat_system.llm_engine import LLMEngine
-        llm = LLMEngine(use_mock=False)
+        llm = LLMEngine()
         analysis = llm.analyze_user(summary)
         print("\n--- LLM Classification ---")
-        print(f"Classification: {analysis.get('classification')}")
-        print(f"Explanation: {analysis.get('explanation')}")
+        print(f"Classification / Threat Type: {analysis.get('threat_type')}")
+        print(f"Explanation / Reasoning: {analysis.get('reasoning')}")
+        print(f"Risk Score: {analysis.get('risk_score')}")
+        print(f"Governance Action: {analysis.get('governance_action')}")
         print("----------------")
         
     except Exception as e:
